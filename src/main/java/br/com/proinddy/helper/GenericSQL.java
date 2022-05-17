@@ -9,23 +9,26 @@ import java.io.*;
 public class GenericSQL {
 
     @ConfigProperty(name= "mixtel.report.path")
-    private String REPORT_PATH;
+    private String reportPath;
 
     public String parse(String relatorioName, String base, String empresa) throws IOException {
-        FileInputStream stream = new FileInputStream(this.REPORT_PATH +"/"+relatorioName+".sql");
+        FileInputStream stream = new FileInputStream(this.reportPath +"/"+relatorioName+".sql");
         InputStreamReader reader = new InputStreamReader(stream);
         BufferedReader bufferedReader = new BufferedReader(reader);
+        StringBuilder sqlForSelect = new StringBuilder();
 
-        String sqlForSelect = "";
-
-        while(bufferedReader.ready()){
-            sqlForSelect += bufferedReader.readLine();
+        try {
+            while (bufferedReader.ready()) {
+                sqlForSelect.append(bufferedReader.readLine());
+            }
+        } finally {
+            bufferedReader.close();
         }
 
-        sqlForSelect = sqlForSelect.replaceAll("\\|\\|baseNome\\|\\|",base);
-        sqlForSelect = sqlForSelect.replaceAll("\\|\\|emp\\|\\|",empresa);
+        return sqlForSelect.toString()
+                .replace("\\|\\|baseNome\\|\\|",base)
+                .replace("\\|\\|emp\\|\\|",empresa);
 
-        return sqlForSelect;
     }
 
 }
