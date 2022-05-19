@@ -1,0 +1,1 @@
+SELECT col_nome,col_codigo,case when LENGTH(col_pis) < 10  then col_pis else "N" end as col_futuro from ||baseNome||.colaboradores where length(col_pis) < 10 and col_empresa =||emp|| order by col_nome;

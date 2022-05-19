@@ -8,7 +8,7 @@ import java.io.*;
 @Singleton
 public class GenericSQL {
 
-    @ConfigProperty(name= "mixtel.report.path")
+    @ConfigProperty(name= "proindy.report.path")
     private String reportPath;
 
     public String parse(String relatorioName, String base, String empresa) throws IOException {

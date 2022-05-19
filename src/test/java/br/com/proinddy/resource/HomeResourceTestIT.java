@@ -17,5 +17,4 @@ class HomeResourceTestIT {
                 .statusCode(200)
                     .body(is("1.0-final"));
     }
-
 }
