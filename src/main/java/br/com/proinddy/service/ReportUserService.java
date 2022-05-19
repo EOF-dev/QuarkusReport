@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.net.URL;
+import java.util.Arrays;
 
 @Singleton
 public class ReportUserService implements Reportable {
@@ -32,8 +34,10 @@ public class ReportUserService implements Reportable {
 
     public ByteArrayOutputStream buildJasperReport(String relatorioName, String base, String empresa){
         try{
-            JasperReport jasper = JasperCompileManager.compileReport(getPathFromResource(this.reportTemplate));
-            JasperPrint print = JasperFillManager.fillReport(jasper, null, getDataSource(relatorioName, base, empresa));
+            JasperReport jasper = JasperCompileManager
+                    .compileReport(getPathFromResource(this.reportTemplate));
+            JasperPrint print = JasperFillManager
+                    .fillReport(jasper, null, getDataSource(relatorioName, base, empresa));
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(print, bos);
@@ -68,8 +72,23 @@ public class ReportUserService implements Reportable {
     }
 
     private String validReportName(String reportName){
-        File file = new File(getPathFromResource(this.reportPath) +"/"+reportName+".sql");
-        return file.exists() ? file.getName() : null;
+        ClassLoader loader = getClass().getClassLoader();
+        URL path = loader.getResource(this.reportPath);
+
+        var diretorios = new File(path.getPath()).listFiles(File::isDirectory);
+
+        for(var diretorio : diretorios){
+            var files = diretorio.listFiles();
+            var matchingName = Arrays.stream(files)
+                    .filter(x -> x.getName().equals(reportName+".sql"))
+                    .findFirst()
+                    .orElse(null);
+
+            if(matchingName != null){
+                return matchingName.getPath();
+            }
+        }
+        return null;
     }
 
     private String getPathFromResource(String value){
