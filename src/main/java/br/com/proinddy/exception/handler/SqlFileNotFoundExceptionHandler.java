@@ -11,7 +11,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class SqlFileNotFoundExceptionHandler implements ExceptionMapper<SqlFileNotFoundException> {
 
-    @ConfigProperty(name = "mixtel.report.error.msg.sqlfilenotfound")
+    @ConfigProperty(name = "proindy.report.error.msg.sqlfilenotfound")
     String sqlFileNotFound;
 
     @Override
