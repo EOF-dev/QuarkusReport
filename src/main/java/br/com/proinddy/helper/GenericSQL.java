@@ -4,6 +4,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.inject.Singleton;
 import java.io.*;
+import java.net.URL;
 
 @Singleton
 public class GenericSQL {
@@ -12,7 +13,10 @@ public class GenericSQL {
     private String reportPath;
 
     public String parse(String relatorioName, String base, String empresa) throws IOException {
-        FileInputStream stream = new FileInputStream(this.reportPath +"/"+relatorioName+".sql");
+        ClassLoader loader = getClass().getClassLoader();
+        URL URL = loader.getResource(this.reportPath);
+
+        FileInputStream stream = new FileInputStream(URL +"/"+relatorioName+".sql");
         InputStreamReader reader = new InputStreamReader(stream);
         BufferedReader bufferedReader = new BufferedReader(reader);
         StringBuilder sqlForSelect = new StringBuilder();
@@ -28,7 +32,5 @@ public class GenericSQL {
         return sqlForSelect.toString()
                 .replace("\\|\\|baseNome\\|\\|",base)
                 .replace("\\|\\|emp\\|\\|",empresa);
-
     }
-
 }

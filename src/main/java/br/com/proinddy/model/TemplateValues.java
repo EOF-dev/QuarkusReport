@@ -11,10 +11,13 @@ public class TemplateValues {
     private Long col_codigo;
     private String col_futuro;
 
+    private String Nome;
+
     public TemplateValues(String col_nome, Long col_codigo, String col_futuro) {
         this.col_nome = col_nome;
         this.col_codigo = col_codigo;
         this.col_futuro = col_futuro;
+        this.Nome = col_nome;
     }
 
     public String getCol_nome() {
@@ -27,5 +30,9 @@ public class TemplateValues {
 
     public String getCol_futuro() {
         return col_futuro;
+    }
+
+    public String getNome() {
+        return Nome;
     }
 }
