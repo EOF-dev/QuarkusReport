@@ -1,5 +1,7 @@
 package br.com.proinddy.resource;
 
+import br.com.proinddy.models.report.ReportInfo;
+import br.com.proinddy.service.interfaces.Queryable;
 import br.com.proinddy.service.interfaces.Reportable;
 
 import javax.enterprise.context.RequestScoped;
@@ -13,20 +15,37 @@ import java.io.ByteArrayOutputStream;
 @Path("/report")
 public class ReportResource {
 
-    @Inject
     Reportable reportService;
+    Queryable reportConfigService;
+
+    @Inject
+    public ReportResource(Reportable reportService, Queryable reportConfigService) {
+        this.reportService = reportService;
+        this.reportConfigService = reportConfigService;
+    }
 
     @GET
-    @Path("")
+    @Path("/{id}")
     @Produces( MediaType.APPLICATION_OCTET_STREAM)
-    public Response buildReport(@QueryParam("relatorioName") String relatorioName,
+    public Response buildReport(@PathParam("id") int id,
                                 @QueryParam("base") String base,
                                 @QueryParam("empresa") String empresa
     ){
-        ByteArrayOutputStream retorno = reportService.buildJasperReport(relatorioName, base, empresa);
-        if(retorno == null){
-            return Response.status(Response.Status.NOT_FOUND).build();
+        try{
+            ReportInfo config = reportConfigService.getById(id);
+            if(config == null){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            ByteArrayOutputStream relatorio = reportService.buildJasperReport(config, base, empresa);
+
+            Response.ResponseBuilder response = Response.ok(relatorio.toByteArray());
+            response.header("Content-Disposition", "inline;filename=" + config.getNome() + ".pdf");
+            response.header("Content-Type", "application/pdf");
+            return response.build();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.status(Response.Status.OK).entity(retorno.toByteArray()).build();
     }
 }
