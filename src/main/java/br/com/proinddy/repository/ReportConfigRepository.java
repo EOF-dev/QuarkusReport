@@ -27,10 +27,10 @@ public class ReportConfigRepository {
     public ReportInfo getById(int id) throws SQLException {
         ResultSet result = dao.execute(sqlHelper.getById(id, TABLENAME));
 
-        if(result.isBeforeFirst()){
+        if (result.isBeforeFirst()) {
             result.next();
             ReportInfo reportInfo = new ReportInfo();
-            if(!result.wasNull()){
+            if (!result.wasNull()) {
                 reportInfo.setId(result.getLong("rel_id"));
                 reportInfo.setNome(result.getString("rel_nome"));
                 reportInfo.setGrupoId(result.getLong("grel_id"));

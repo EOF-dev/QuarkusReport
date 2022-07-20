@@ -21,11 +21,11 @@ public class GenericSQL {
         }
 
         return sqlForSelect.toString()
-                .replace("||baseNome||",base);
-                //.replace("\\|\\|emp\\|\\|",empresa);
+                .replace("||emp||", empresa)
+                .replace("||baseNome||", base);
     }
 
-    public String getById(Integer id, String tablename){
+    public String getById(Integer id, String tablename) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * ");
         sql.append("FROM ");
@@ -34,6 +34,4 @@ public class GenericSQL {
 
         return sql.toString().replace("||id||", id.toString());
     }
-
-
 }
